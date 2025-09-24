@@ -4,25 +4,22 @@ import Chat from './components/chat'
 
 const socket = io.connect("https://chat-application-backend-node-js.vercel.app");
 
-
 const App = () => {
-
   const [userName, setUserName] = useState('');
   const [chatRoom, setChatRoom] = useState('');
   const [showChat, setShowChat] = useState(false);
 
-  console.log(userName, chatRoom)
-
   const handleJoinChat = () => {
-    if (userName !== '' && chatRoom !== '') {
-      socket.emit('join_room', chatRoom)
-      setShowChat(true)
-
+    const trimmedUser = userName.trim();
+    const trimmedRoom = chatRoom.trim();
+    if (trimmedUser !== '' && trimmedRoom !== '') {
+      // Optionally, remove this if handled inside Chat component
+      socket.emit('join_room', trimmedRoom);
+      setShowChat(true);
     }
   }
 
   return (
-
     <div className='join_room'>
       {!showChat ? (
         <>
@@ -42,11 +39,10 @@ const App = () => {
           <button type="submit" onClick={handleJoinChat}>Join</button>
         </>
       ) : (
-        <Chat socket={socket} userName={userName} chatRoom={chatRoom} />
+        <Chat socket={socket} userName={userName.trim()} chatRoom={chatRoom.trim()} />
       )}
     </div>
-
   )
 }
 
-export default App
+export default App;
